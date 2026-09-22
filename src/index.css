@@ -1,10 +1,25 @@
 @import "tailwindcss";
 
 /*
- * Real visual identity (palette, type, layout) comes once we build the
- * actual pages in the next slice — this file just gets Tailwind wired
- * up and clears Vite's template styling out of the way.
+ * Design tokens for the whole app — a manga-page palette (ink on
+ * paper) with two accents that each mean something specific:
+ * crimson = category/action, violet = fandom tag. Keeping that
+ * mapping consistent everywhere is what lets color carry meaning
+ * instead of just decorating.
  */
+@theme {
+  --color-ink: #14141a;
+  --color-ink-muted: #6b6b76;
+  --color-paper: #f6f6f3;
+  --color-line: #e4e2dc;
+  --color-crimson: #e23e44;
+  --color-crimson-soft: #fbe9ea;
+  --color-violet: #6c5ce7;
+  --color-violet-soft: #ece9fc;
+
+  --font-display: "Archivo Black", "Inter", sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
 
 html,
 body,
@@ -14,4 +29,7 @@ body,
 
 body {
   margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
 }
