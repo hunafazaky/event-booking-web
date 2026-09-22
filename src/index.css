@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+/*
+ * Real visual identity (palette, type, layout) comes once we build the
+ * actual pages in the next slice — this file just gets Tailwind wired
+ * up and clears Vite's template styling out of the way.
+ */
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+}
