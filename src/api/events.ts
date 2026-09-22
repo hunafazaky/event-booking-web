@@ -70,7 +70,11 @@ export const eventsApi = {
       .getWithMeta<Event[], PageMeta>(`/events${buildQuery(params)}`, false)
       .then(({ data, meta }) => ({ events: data, meta })),
 
-  getById: (id: number) => api.get<EventDetail>(`/events/${id}`, false),
+  // No `false` here (unlike list): if a token exists, sending it lets
+  // the backend recognize the viewer as this event's organizer and
+  // include the full attendee list. Works fine with no token too —
+  // OptionalAuth on the backend never requires one.
+  getById: (id: number) => api.get<EventDetail>(`/events/${id}`),
 
   getMine: () => api.get<Event[]>('/events/mine'),
 

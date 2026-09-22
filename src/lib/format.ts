@@ -17,3 +17,13 @@ export function formatFullDateTime(iso: string): string {
     timeStyle: 'short',
   })
 }
+
+// Converts an RFC3339 string (from the API) into the local-time value
+// an <input type="datetime-local"> expects ("YYYY-MM-DDTHH:mm") — used
+// to prefill the edit form. The reverse direction (form -> API) is
+// just `new Date(inputValue).toISOString()`, no helper needed.
+export function toDatetimeLocalValue(iso: string): string {
+  const d = new Date(iso)
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+}

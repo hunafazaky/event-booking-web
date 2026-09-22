@@ -8,6 +8,8 @@ import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignUpPage'
 import ProfilePage from './pages/ProfilePage'
 import OrganizerDashboardPage from './pages/OrganizerDashboardPage'
+import CreateEventPage from './pages/CreateEventPage'
+import EditEventPage from './pages/EditEventPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 export default function App() {
@@ -28,6 +30,8 @@ export default function App() {
         {/* Organizer/admin only */}
         <Route element={<OrganizerRoute />}>
           <Route path="organizer" element={<OrganizerDashboardPage />} />
+          <Route path="organizer/new" element={<CreateEventPage />} />
+          <Route path="organizer/:id/edit" element={<EditEventPage />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />

@@ -46,7 +46,7 @@ export default function EventDetailPage() {
         <div className="mt-4 flex items-center gap-2">
           <CategoryBadge category={event.category} />
           <span className="text-sm text-ink-muted">
-            {event.bookings.length} {event.bookings.length === 1 ? 'person' : 'people'} going
+            {event.attendee_count} {event.attendee_count === 1 ? 'person' : 'people'} going
           </span>
         </div>
 

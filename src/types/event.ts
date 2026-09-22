@@ -54,7 +54,13 @@ export interface BookingSummary {
   user: User
 }
 
-/** Mirrors internal/dto.EventDetailResponse. */
+/**
+ * Mirrors internal/dto.EventDetailResponse. `bookings` is only
+ * populated when the viewer is this event's organizer or an admin —
+ * everyone else gets an empty array here, but attendee_count is
+ * always accurate regardless of who's asking.
+ */
 export interface EventDetail extends Event {
+  attendee_count: number
   bookings: BookingSummary[]
 }
