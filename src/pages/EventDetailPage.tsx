@@ -4,7 +4,7 @@ import { eventsApi } from '../api/events'
 import { bookingsApi } from '../api/bookings'
 import type { EventDetail } from '../types/event'
 import { ApiError } from '../lib/api'
-import { formatFullDateTime } from '../lib/format'
+import { formatFullDateTime, handleImageError } from '../lib/format'
 import { useAuth } from '../context/AuthContext'
 import CategoryBadge from '../components/ui/CategoryBadge'
 import TagChip from '../components/ui/TagChip'
@@ -40,6 +40,7 @@ export default function EventDetailPage() {
         <img
           src={event.image}
           alt={event.name}
+          onError={handleImageError}
           className="aspect-video w-full rounded-lg border border-ink object-cover"
         />
 

@@ -1,3 +1,5 @@
+import type { SyntheticEvent } from 'react'
+
 // Ticket-stub date formatting — day number big, month abbreviation
 // small and capitalized, mirroring how a physical event ticket or a
 // tear-off calendar page shows a date. Locale is hardcoded to en-US
@@ -26,4 +28,13 @@ export function toDatetimeLocalValue(iso: string): string {
   const d = new Date(iso)
   const pad = (n: number) => String(n).padStart(2, '0')
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
+// Swaps a broken <img> (e.g. an ImageKit URL that 404s) for a
+// placehold.co placeholder. Clears onerror first so a failing
+// placeholder itself can't loop forever re-triggering this handler.
+export function handleImageError(e: SyntheticEvent<HTMLImageElement>) {
+  const img = e.currentTarget
+  img.onerror = null
+  img.src = 'https://placehold.co/800x450?text=No+Image'
 }

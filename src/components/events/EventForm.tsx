@@ -2,6 +2,7 @@ import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
 import { CATEGORIES, CATEGORY_LABELS, type Category } from '../../types/event'
 import { tagsApi } from '../../api/tags'
 import { ApiError } from '../../lib/api'
+import { handleImageError } from '../../lib/format'
 import TagInput from '../ui/TagInput'
 
 export interface EventFormValues {
@@ -172,7 +173,12 @@ export default function EventForm({
           Event image{imageRequired ? '' : ' (leave blank to keep the current one)'}
         </label>
         {preview && (
-          <img src={preview} alt="" className="mt-2 aspect-video w-full rounded-lg border border-ink object-cover" />
+          <img
+            src={preview}
+            alt=""
+            onError={handleImageError}
+            className="mt-2 aspect-video w-full rounded-lg border border-ink object-cover"
+          />
         )}
         <input
           id="image"
