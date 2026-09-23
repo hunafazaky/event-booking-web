@@ -76,6 +76,14 @@ export default function EventDetailPage() {
   )
 }
 
+// bookingsApi.create returns the full Booking shape (id, code, phone,
+// event); event.your_booking is the reduced BookingSummary shape (id,
+// code, phone, user) — different DTOs on the backend for different
+// endpoints. This box only ever needs id + booking_code, so it uses
+// the minimal shape both satisfy rather than picking one and fighting
+// the other's type.
+type BookingLite = { id: number; booking_code: string }
+
 function BookingBox({
   event,
   isOwnEvent,
@@ -88,17 +96,35 @@ function BookingBox({
   const [phone, setPhone] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [bookingCode, setBookingCode] = useState<string | null>(null)
+  // Seeded from the server (event.your_booking) rather than starting
+  // null every time — this is what fixes "still shows the booking
+  // form after I already booked and came back to this page".
+  const [booking, setBooking] = useState<BookingLite | null>(event.your_booking)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setSubmitting(true)
     setError(null)
     try {
-      const booking = await bookingsApi.create({ phone, event_id: event.id })
-      setBookingCode(booking.booking_code)
+      const created = await bookingsApi.create({ phone, event_id: event.id })
+      setBooking(created)
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Failed to book this event.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  async function handleCancel() {
+    if (!booking) return
+    if (!confirm('Cancel this booking?')) return
+    setSubmitting(true)
+    setError(null)
+    try {
+      await bookingsApi.delete(booking.id)
+      setBooking(null)
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Failed to cancel booking.')
     } finally {
       setSubmitting(false)
     }
@@ -127,13 +153,23 @@ function BookingBox({
     )
   }
 
-  if (bookingCode) {
+  if (booking) {
     return (
       <div className={boxClasses}>
         <p className="font-semibold">You're booked!</p>
         <p className="mt-1 text-sm text-ink-muted">
-          Booking code: <span className="font-mono text-ink">{bookingCode}</span>
+          Booking code: <span className="font-mono text-ink">{booking.booking_code}</span>
         </p>
+
+        {error && <p className="mt-2 text-sm text-crimson">{error}</p>}
+
+        <button
+          onClick={handleCancel}
+          disabled={submitting}
+          className="mt-3 text-sm font-medium text-crimson disabled:opacity-50"
+        >
+          {submitting ? 'Cancelling…' : 'Cancel booking'}
+        </button>
       </div>
     )
   }

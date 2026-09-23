@@ -37,6 +37,12 @@ export default function Layout() {
             {user ? (
               <>
                 <NavLink
+                  to="/bookings"
+                  className={({ isActive }) => (isActive ? 'text-crimson' : 'text-ink-muted')}
+                >
+                  My Bookings
+                </NavLink>
+                <NavLink
                   to="/profile"
                   className={({ isActive }) => (isActive ? 'text-crimson' : 'text-ink-muted')}
                 >

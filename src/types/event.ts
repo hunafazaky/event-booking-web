@@ -58,9 +58,12 @@ export interface BookingSummary {
  * Mirrors internal/dto.EventDetailResponse. `bookings` is only
  * populated when the viewer is this event's organizer or an admin —
  * everyone else gets an empty array here, but attendee_count is
- * always accurate regardless of who's asking.
+ * always accurate regardless of who's asking. `your_booking` is
+ * different: it's the viewer's OWN booking on this event (or null),
+ * visible to any signed-in viewer since it's their own data.
  */
 export interface EventDetail extends Event {
   attendee_count: number
   bookings: BookingSummary[]
+  your_booking: BookingSummary | null
 }

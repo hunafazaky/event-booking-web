@@ -22,6 +22,8 @@ export const authApi = {
   signUp: (input: SignUpInput) => api.post<User>('/auth/signup', input, false),
   signIn: (input: SignInInput) => api.post<SignInResult>('/auth/signin', input, false),
   getMe: () => api.get<User>('/auth/me'),
+  updateProfile: (name: string) => api.patch<User>('/auth/me', { name }),
+  deleteAccount: () => api.delete<null>('/auth/me'),
   updateInterests: (interests: string[]) =>
     api.put<User>('/auth/me/interests', { interests }),
 }

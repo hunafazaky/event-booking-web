@@ -7,6 +7,7 @@ import EventDetailPage from './pages/EventDetailPage'
 import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignUpPage'
 import ProfilePage from './pages/ProfilePage'
+import BookingsPage from './pages/BookingsPage'
 import OrganizerDashboardPage from './pages/OrganizerDashboardPage'
 import CreateEventPage from './pages/CreateEventPage'
 import EditEventPage from './pages/EditEventPage'
@@ -25,6 +26,7 @@ export default function App() {
         {/* Any signed-in user */}
         <Route element={<ProtectedRoute />}>
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="bookings" element={<BookingsPage />} />
         </Route>
 
         {/* Organizer/admin only */}

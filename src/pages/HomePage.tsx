@@ -8,6 +8,7 @@ import { ApiError } from '../lib/api'
 import { useDebouncedValue } from '../lib/useDebouncedValue'
 import EventCard from '../components/events/EventCard'
 import Pagination from '../components/ui/Pagination'
+import Hero from '../components/home/Hero'
 
 export default function HomePage() {
   const [search, setSearch] = useState('')
@@ -54,10 +55,9 @@ export default function HomePage() {
 
   return (
     <div>
-      <h1 className="font-display text-3xl">Upcoming Anime Events</h1>
-      <p className="mt-2 text-ink-muted">
-        Conventions, screenings, doujin markets, and more from the community.
-      </p>
+      <Hero />
+
+      <h2 className="mt-10 font-display text-2xl">Upcoming Events</h2>
 
       <div className="mt-6 flex flex-col gap-4">
         <input
