@@ -1,4 +1,5 @@
 import { useId, useState, type KeyboardEvent } from 'react'
+import { X } from 'lucide-react'
 
 interface TagInputProps {
   value: string[]
@@ -38,21 +39,21 @@ export default function TagInput({ value, onChange, suggestions = [], placeholde
   }
 
   return (
-    <div className="rounded-lg border border-ink p-2">
+    <div className="rounded-base border-2 border-border bg-secondary-background p-2 shadow-shadow">
       <div className="flex flex-wrap gap-1.5">
         {value.map((name) => (
           <span
             key={name}
-            className="flex items-center gap-1 rounded-full bg-violet-soft px-2.5 py-1 text-xs font-medium text-violet"
+            className="flex items-center gap-1 rounded-base border-2 border-border bg-tag px-2.5 py-1 text-xs font-base text-tag-foreground"
           >
             {name}
             <button
               type="button"
               onClick={() => removeTag(name)}
               aria-label={`Remove ${name}`}
-              className="text-violet/70 hover:text-violet"
+              className="hover:opacity-70"
             >
-              ×
+              <X className="size-3" />
             </button>
           </span>
         ))}
@@ -64,7 +65,7 @@ export default function TagInput({ value, onChange, suggestions = [], placeholde
           onKeyDown={handleKeyDown}
           onBlur={() => addTag(draft)}
           placeholder={value.length === 0 ? placeholder : undefined}
-          className="min-w-32 flex-1 px-1 py-1 text-sm outline-none"
+          className="min-w-32 flex-1 px-1 py-1 text-sm font-base outline-none"
         />
         <datalist id={listId}>
           {suggestions.map((s) => (

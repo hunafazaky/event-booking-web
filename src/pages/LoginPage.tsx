@@ -2,6 +2,10 @@ import { useState } from 'react'
 import { useLocation, useNavigate, Link, type Location } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { ApiError } from '../lib/api'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 export default function LoginPage() {
   const { signIn } = useAuth()
@@ -34,51 +38,47 @@ export default function LoginPage() {
 
   return (
     <div className="mx-auto max-w-sm">
-      <h1 className="font-display text-2xl">Sign In</h1>
+      <h1 className="font-heading text-2xl">Sign In</h1>
 
-      <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
-        <div>
-          <label htmlFor="email" className="text-sm font-medium">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-ink px-3 py-2 focus:outline-2 focus:outline-crimson"
-          />
-        </div>
+      <Card className="mt-6">
+        <CardContent>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mt-1"
+              />
+            </div>
 
-        <div>
-          <label htmlFor="password" className="text-sm font-medium">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-ink px-3 py-2 focus:outline-2 focus:outline-crimson"
-          />
-        </div>
+            <div>
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="mt-1"
+              />
+            </div>
 
-        {error && <p className="text-sm text-crimson">{error}</p>}
+            {error && <p className="text-sm font-base text-warning-foreground">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="rounded-full bg-crimson px-4 py-2 font-medium text-white disabled:opacity-50"
-        >
-          {submitting ? 'Signing in…' : 'Sign In'}
-        </button>
-      </form>
+            <Button type="submit" disabled={submitting}>
+              {submitting ? 'Signing in…' : 'Sign In'}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
 
-      <p className="mt-4 text-sm text-ink-muted">
+      <p className="mt-4 text-sm font-base text-foreground/70">
         Don't have an account?{' '}
-        <Link to="/signup" className="font-medium text-crimson">
+        <Link to="/signup" className="font-heading underline">
           Sign up
         </Link>
       </p>

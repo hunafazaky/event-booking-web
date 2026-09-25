@@ -4,6 +4,20 @@ import { bookingsApi } from '../api/bookings'
 import type { Booking } from '../types/booking'
 import { ApiError } from '../lib/api'
 import { formatFullDateTime } from '../lib/format'
+import LoadingState from '../components/ui/LoadingState'
+import EmptyState from '../components/ui/EmptyState'
+import { Button } from '@/components/ui/button'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([])
@@ -20,7 +34,6 @@ export default function BookingsPage() {
   }, [])
 
   async function handleCancel(id: number) {
-    if (!confirm('Cancel this booking?')) return
     setCancellingId(id)
     try {
       await bookingsApi.delete(id)
@@ -34,18 +47,18 @@ export default function BookingsPage() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl">My Bookings</h1>
+      <h1 className="font-heading text-2xl">My Bookings</h1>
 
-      {loading && <p className="mt-6 text-ink-muted">Loading…</p>}
-      {error && <p className="mt-6 text-crimson">{error}</p>}
+      {loading && <LoadingState />}
+      {error && <p className="mt-6 font-base text-warning-foreground">{error}</p>}
 
       {!loading && !error && bookings.length === 0 && (
-        <p className="mt-6 text-ink-muted">
-          You haven't booked anything yet.{' '}
-          <Link to="/" className="font-medium text-crimson">
-            Browse events
-          </Link>
-        </p>
+        <div className="mt-6">
+          <EmptyState
+            message="You haven't booked anything yet."
+            action={{ label: 'Browse events', to: '/' }}
+          />
+        </div>
       )}
 
       {!loading && !error && bookings.length > 0 && (
@@ -53,26 +66,44 @@ export default function BookingsPage() {
           {bookings.map((booking) => (
             <div
               key={booking.id}
-              className="flex items-center justify-between gap-4 rounded-lg border border-ink p-4"
+              className="flex flex-col gap-3 rounded-base border-2 border-border bg-secondary-background p-4 shadow-shadow sm:flex-row sm:items-center sm:justify-between"
             >
               <div>
-                <Link to={`/events/${booking.event.id}`} className="font-semibold hover:underline">
+                <Link to={`/events/${booking.event.id}`} className="font-heading hover:underline">
                   {booking.event.name}
                 </Link>
-                <p className="mt-1 text-sm text-ink-muted">{formatFullDateTime(booking.event.datetime)}</p>
-                <p className="text-sm text-ink-muted">{booking.event.location}</p>
-                <p className="mt-1 text-sm">
+                <p className="mt-1 text-sm font-base text-foreground/70">
+                  {formatFullDateTime(booking.event.datetime)}
+                </p>
+                <p className="text-sm font-base text-foreground/70">{booking.event.location}</p>
+                <p className="mt-1 text-sm font-base">
                   Booking code: <span className="font-mono">{booking.booking_code}</span>
                 </p>
               </div>
 
-              <button
-                onClick={() => handleCancel(booking.id)}
-                disabled={cancellingId === booking.id}
-                className="flex-none text-sm font-medium text-crimson disabled:opacity-50"
-              >
-                {cancellingId === booking.id ? 'Cancelling…' : 'Cancel'}
-              </button>
+              <AlertDialog>
+                <AlertDialogTrigger
+                  render={
+                    <Button variant="warning" size="sm" disabled={cancellingId === booking.id} className="flex-none">
+                      {cancellingId === booking.id ? 'Cancelling…' : 'Cancel'}
+                    </Button>
+                  }
+                />
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Cancel this booking?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Your spot at "{booking.event.name}" will be released.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Keep booking</AlertDialogCancel>
+                    <AlertDialogAction variant="warning" onClick={() => handleCancel(booking.id)}>
+                      Cancel Booking
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           ))}
         </div>

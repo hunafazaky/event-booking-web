@@ -5,6 +5,21 @@ import { authApi } from '../api/auth'
 import { tagsApi } from '../api/tags'
 import { ApiError } from '../lib/api'
 import TagInput from '../components/ui/TagInput'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 
 export default function ProfilePage() {
   const { user, refreshUser, signOut } = useAuth()
@@ -73,7 +88,6 @@ export default function ProfilePage() {
   }
 
   async function handleDeleteAccount() {
-    if (!confirm('Delete your account? This cannot be undone.')) return
     setDeleting(true)
     setDeleteError(null)
     try {
@@ -88,79 +102,105 @@ export default function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-md">
-      <h1 className="font-display text-2xl">Profile</h1>
+      <h1 className="font-heading text-2xl">Profile</h1>
 
-      <div className="mt-8">
-        <label htmlFor="name" className="text-sm font-medium">
-          Name
-        </label>
-        <input
-          id="name"
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value)
-            setNameSaved(false)
-          }}
-          className="mt-1 w-full rounded-lg border border-ink px-3 py-2 focus:outline-2 focus:outline-crimson"
-        />
-        {nameError && <p className="mt-2 text-sm text-crimson">{nameError}</p>}
-        {nameSaved && !nameError && <p className="mt-2 text-sm text-ink-muted">Saved.</p>}
-        <button
-          onClick={handleSaveName}
-          disabled={savingName || name === user.name}
-          className="mt-3 rounded-full bg-crimson px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-        >
-          {savingName ? 'Saving…' : 'Save Name'}
-        </button>
-      </div>
-
-      <p className="mt-6 text-ink-muted">{user.email}</p>
-      <p className="mt-1 text-sm text-ink-muted capitalize">{user.role}</p>
-
-      <div className="mt-8">
-        <label className="text-sm font-medium">Favorite series</label>
-        <p className="mt-1 text-xs text-ink-muted">
-          Add anything — a series, a genre, a tag. Press Enter or comma after each one.
-        </p>
-        <div className="mt-2">
-          <TagInput
-            value={interests}
-            onChange={(next) => {
-              setInterests(next)
-              setInterestsSaved(false)
+      <Card className="mt-8">
+        <CardContent>
+          <Label htmlFor="name">Name</Label>
+          <Input
+            id="name"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value)
+              setNameSaved(false)
             }}
-            suggestions={suggestions}
-            placeholder="e.g. Jujutsu Kaisen, shounen"
+            className="mt-1"
           />
-        </div>
+          {nameError && <p className="mt-2 text-sm font-base text-warning-foreground">{nameError}</p>}
+          {nameSaved && !nameError && (
+            <p className="mt-2 text-sm font-base text-success-foreground">Saved.</p>
+          )}
+          <Button
+            size="sm"
+            onClick={handleSaveName}
+            disabled={savingName || name === user.name}
+            className="mt-3"
+          >
+            {savingName ? 'Saving…' : 'Save Name'}
+          </Button>
 
-        {interestsError && <p className="mt-2 text-sm text-crimson">{interestsError}</p>}
-        {interestsSaved && !interestsError && <p className="mt-2 text-sm text-ink-muted">Saved.</p>}
+          <p className="mt-6 font-base text-foreground/70">{user.email}</p>
+          <p className="mt-1 text-sm font-base text-foreground/70 capitalize">{user.role}</p>
+        </CardContent>
+      </Card>
 
-        <button
-          onClick={handleSaveInterests}
-          disabled={savingInterests}
-          className="mt-4 rounded-full bg-crimson px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-        >
-          {savingInterests ? 'Saving…' : 'Save Interests'}
-        </button>
-      </div>
+      <Card className="mt-6">
+        <CardContent>
+          <Label>Favorite series</Label>
+          <p className="mt-1 text-xs font-base text-foreground/70">
+            Add anything — a series, a genre, a tag. Press Enter or comma after each one.
+          </p>
+          <div className="mt-2">
+            <TagInput
+              value={interests}
+              onChange={(next) => {
+                setInterests(next)
+                setInterestsSaved(false)
+              }}
+              suggestions={suggestions}
+              placeholder="e.g. Jujutsu Kaisen, shounen"
+            />
+          </div>
 
-      <div className="mt-12 rounded-lg border border-crimson p-5">
-        <p className="font-semibold text-crimson">Delete Account</p>
-        <p className="mt-1 text-sm text-ink-muted">
-          This permanently deletes your account. Events or bookings you've already created aren't
-          removed — they'll just no longer show your name.
-        </p>
-        {deleteError && <p className="mt-2 text-sm text-crimson">{deleteError}</p>}
-        <button
-          onClick={handleDeleteAccount}
-          disabled={deleting}
-          className="mt-3 rounded-full border border-crimson px-4 py-2 text-sm font-medium text-crimson disabled:opacity-50"
-        >
-          {deleting ? 'Deleting…' : 'Delete My Account'}
-        </button>
-      </div>
+          {interestsError && (
+            <p className="mt-2 text-sm font-base text-warning-foreground">{interestsError}</p>
+          )}
+          {interestsSaved && !interestsError && (
+            <p className="mt-2 text-sm font-base text-success-foreground">Saved.</p>
+          )}
+
+          <Button size="sm" onClick={handleSaveInterests} disabled={savingInterests} className="mt-4">
+            {savingInterests ? 'Saving…' : 'Save Interests'}
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card className="mt-12 border-warning-foreground">
+        <CardContent>
+          <p className="font-heading text-warning-foreground">Delete Account</p>
+          <p className="mt-1 text-sm font-base text-foreground/70">
+            This permanently deletes your account. Events or bookings you've already created
+            aren't removed — they'll just no longer show your name.
+          </p>
+          {deleteError && (
+            <p className="mt-2 text-sm font-base text-warning-foreground">{deleteError}</p>
+          )}
+
+          <AlertDialog>
+            <AlertDialogTrigger
+              render={
+                <Button variant="warning" size="sm" disabled={deleting} className="mt-3">
+                  {deleting ? 'Deleting…' : 'Delete My Account'}
+                </Button>
+              }
+            />
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete your account?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This cannot be undone. Your account will be permanently deleted.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction variant="warning" onClick={handleDeleteAccount}>
+                  Delete Account
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </CardContent>
+      </Card>
     </div>
   )
 }

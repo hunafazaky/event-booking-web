@@ -1,24 +1,90 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 /*
- * Design tokens for the whole app — a manga-page palette (ink on
- * paper) with two accents that each mean something specific:
- * crimson = category/action, violet = fandom tag. Keeping that
- * mapping consistent everywhere is what lets color carry meaning
- * instead of just decorating.
+ * Design tokens for AdaMatsuri — neobrutalism (thick borders, hard
+ * offset shadows, flat fills) in a pastel palette rather than the
+ * genre's usual stark primary colors. Two token groups:
+ *
+ * 1. Raw values in :root — kept separate from the @theme block so a
+ *    future dark mode only means adding a .dark block here, nothing
+ *    about the Tailwind wiring below has to change.
+ * 2. @theme inline — maps those raw values into Tailwind's utility
+ *    namespaces (--color-*, --radius-*, --shadow-*, --font-weight-*),
+ *    which is what actually makes classes like `bg-main` or
+ *    `shadow-shadow` exist. This mirrors the real neobrutalism.dev
+ *    component contract (verified against their actual component
+ *    source, not just their docs) — swapping in pastel hex values
+ *    for their usual saturated ones, nothing about the shape changes.
  */
-@theme {
-  --color-ink: #14141a;
-  --color-ink-muted: #6b6b76;
-  --color-paper: #f6f6f3;
-  --color-line: #e4e2dc;
-  --color-crimson: #e23e44;
-  --color-crimson-soft: #fbe9ea;
-  --color-violet: #6c5ce7;
-  --color-violet-soft: #ece9fc;
 
-  --font-display: "Archivo Black", "Inter", sans-serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+:root {
+  --background: #fdfbf6;
+  --foreground: #1a1a1a;
+  --border: #1a1a1a;
+  --overlay: rgba(0, 0, 0, 0.6);
+
+  /* Accent — primary buttons, links, category badges */
+  --main: #a8d8ff;
+  --main-foreground: #1a1a1a;
+
+  /* Card/input fill, distinct from the page background */
+  --secondary-background: #ffffff;
+
+  /* Fandom tags — distinct from categories (kept per your call to
+     preserve that visual distinction under the new palette) */
+  --tag: #e4d6ff;
+  --tag-foreground: #4b2e83;
+
+  /* Semantic status: success=green, warning=red, info=yellow */
+  --success: #b8f1c4;
+  --success-foreground: #1f7a3d;
+  --warning: #ffc2c2;
+  --warning-foreground: #b3261e;
+  --info: #fff3b0;
+  --info-foreground: #8a6d00;
+
+  --ring: #1a1a1a;
+}
+
+@theme inline {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-border: var(--border);
+  --color-overlay: var(--overlay);
+
+  --color-main: var(--main);
+  --color-main-foreground: var(--main-foreground);
+
+  --color-secondary-background: var(--secondary-background);
+
+  --color-tag: var(--tag);
+  --color-tag-foreground: var(--tag-foreground);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  --color-ring: var(--ring);
+
+  /* rounded-base — used by every component below instead of
+     Tailwind's default rounded-md/lg, so one token controls the
+     corner style everywhere at once. */
+  --radius-base: 0.5rem;
+
+  /* shadow-shadow — the signature hard offset shadow (no blur). */
+  --shadow-shadow: 4px 4px 0px 0px var(--border);
+
+  /* font-base / font-heading — weight utilities (not font-family:
+     the whole app uses one family, Plus Jakarta Sans, so "heading"
+     just means bolder, not a different typeface). */
+  --font-weight-base: 500;
+  --font-weight-heading: 800;
 }
 
 html,
@@ -29,7 +95,7 @@ body,
 
 body {
   margin: 0;
-  background: var(--color-paper);
-  color: var(--color-ink);
   font-family: var(--font-sans);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
 }

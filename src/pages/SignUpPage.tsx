@@ -3,6 +3,10 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { ApiError } from '../lib/api'
 import type { Role } from '../types/user'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 export default function SignUpPage() {
   const { signUp } = useAuth()
@@ -32,94 +36,84 @@ export default function SignUpPage() {
 
   return (
     <div className="mx-auto max-w-sm">
-      <h1 className="font-display text-2xl">Sign Up</h1>
+      <h1 className="font-heading text-2xl">Sign Up</h1>
 
-      <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
-        <div>
-          <label htmlFor="name" className="text-sm font-medium">
-            Name
-          </label>
-          <input
-            id="name"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-ink px-3 py-2 focus:outline-2 focus:outline-crimson"
-          />
-        </div>
+      <Card className="mt-6">
+        <CardContent>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div>
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="mt-1"
+              />
+            </div>
 
-        <div>
-          <label htmlFor="email" className="text-sm font-medium">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-ink px-3 py-2 focus:outline-2 focus:outline-crimson"
-          />
-        </div>
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mt-1"
+              />
+            </div>
 
-        <div>
-          <label htmlFor="password" className="text-sm font-medium">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            required
-            minLength={6}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-ink px-3 py-2 focus:outline-2 focus:outline-crimson"
-          />
-        </div>
+            <div>
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                required
+                minLength={6}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="mt-1"
+              />
+            </div>
 
-        <fieldset>
-          <legend className="text-sm font-medium">I want to</legend>
-          <div className="mt-2 flex gap-2">
-            <button
-              type="button"
-              onClick={() => setRole('attendee')}
-              className={
-                role === 'attendee'
-                  ? 'flex-1 rounded-lg bg-ink px-3 py-2 text-sm text-white'
-                  : 'flex-1 rounded-lg border border-line px-3 py-2 text-sm text-ink-muted'
-              }
-            >
-              Attend events
-            </button>
-            <button
-              type="button"
-              onClick={() => setRole('organizer')}
-              className={
-                role === 'organizer'
-                  ? 'flex-1 rounded-lg bg-ink px-3 py-2 text-sm text-white'
-                  : 'flex-1 rounded-lg border border-line px-3 py-2 text-sm text-ink-muted'
-              }
-            >
-              Organize events
-            </button>
-          </div>
-          <p className="mt-1 text-xs text-ink-muted">This can't be changed after signing up yet.</p>
-        </fieldset>
+            <fieldset>
+              <Label>I want to</Label>
+              <div className="mt-2 flex gap-2">
+                <Button
+                  type="button"
+                  variant={role === 'attendee' ? 'default' : 'neutral'}
+                  onClick={() => setRole('attendee')}
+                  className="flex-1"
+                >
+                  Attend events
+                </Button>
+                <Button
+                  type="button"
+                  variant={role === 'organizer' ? 'default' : 'neutral'}
+                  onClick={() => setRole('organizer')}
+                  className="flex-1"
+                >
+                  Organize events
+                </Button>
+              </div>
+              <p className="mt-1 text-xs font-base text-foreground/70">
+                This can't be changed after signing up yet.
+              </p>
+            </fieldset>
 
-        {error && <p className="text-sm text-crimson">{error}</p>}
+            {error && <p className="text-sm font-base text-warning-foreground">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="rounded-full bg-crimson px-4 py-2 font-medium text-white disabled:opacity-50"
-        >
-          {submitting ? 'Signing up…' : 'Sign Up'}
-        </button>
-      </form>
+            <Button type="submit" disabled={submitting}>
+              {submitting ? 'Signing up…' : 'Sign Up'}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
 
-      <p className="mt-4 text-sm text-ink-muted">
+      <p className="mt-4 text-sm font-base text-foreground/70">
         Already have an account?{' '}
-        <Link to="/login" className="font-medium text-crimson">
+        <Link to="/login" className="font-heading underline">
           Sign in
         </Link>
       </p>

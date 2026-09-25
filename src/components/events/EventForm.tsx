@@ -4,6 +4,10 @@ import { tagsApi } from '../../api/tags'
 import { ApiError } from '../../lib/api'
 import { handleImageError } from '../../lib/format'
 import TagInput from '../ui/TagInput'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
 
 export interface EventFormValues {
   name: string
@@ -88,96 +92,84 @@ export default function EventForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div>
-        <label htmlFor="name" className="text-sm font-medium">
-          Event name
-        </label>
-        <input
-          id="name"
-          required
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="mt-1 w-full rounded-lg border border-ink px-3 py-2 focus:outline-2 focus:outline-crimson"
-        />
+        <Label htmlFor="name">Event name</Label>
+        <Input id="name" required value={name} onChange={(e) => setName(e.target.value)} className="mt-1" />
       </div>
 
       <div>
-        <label htmlFor="description" className="text-sm font-medium">
-          Description
-        </label>
-        <textarea
+        <Label htmlFor="description">Description</Label>
+        <Textarea
           id="description"
           required
           rows={4}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="mt-1 w-full rounded-lg border border-ink px-3 py-2 focus:outline-2 focus:outline-crimson"
+          className="mt-1"
         />
       </div>
 
       <div>
-        <label htmlFor="location" className="text-sm font-medium">
-          Location
-        </label>
-        <input
+        <Label htmlFor="location">Location</Label>
+        <Input
           id="location"
           required
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          className="mt-1 w-full rounded-lg border border-ink px-3 py-2 focus:outline-2 focus:outline-crimson"
+          className="mt-1"
         />
       </div>
 
       <div>
-        <label htmlFor="datetime" className="text-sm font-medium">
-          Date &amp; time
-        </label>
-        <input
+        <Label htmlFor="datetime">Date &amp; time</Label>
+        <Input
           id="datetime"
           type="datetime-local"
           required
           value={datetimeLocal}
           onChange={(e) => setDatetimeLocal(e.target.value)}
-          className="mt-1 w-full rounded-lg border border-ink px-3 py-2 focus:outline-2 focus:outline-crimson"
+          className="mt-1"
         />
       </div>
 
       <div>
-        <span className="text-sm font-medium">Category</span>
+        <Label>Category</Label>
         <div className="mt-2 flex flex-wrap gap-2">
           {CATEGORIES.map((c) => (
-            <button
+            <Button
               key={c}
               type="button"
+              variant={category === c ? 'default' : 'neutral'}
+              size="sm"
               onClick={() => setCategory(c)}
-              className={
-                category === c
-                  ? 'rounded-full bg-ink px-3 py-1 text-sm text-white'
-                  : 'rounded-full border border-line px-3 py-1 text-sm text-ink-muted'
-              }
             >
               {CATEGORY_LABELS[c]}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
 
       <div>
-        <label className="text-sm font-medium">Fandom tags</label>
+        <Label>Fandom tags</Label>
         <div className="mt-2">
-          <TagInput value={tags} onChange={setTags} suggestions={suggestions} placeholder="e.g. Jujutsu Kaisen, shounen" />
+          <TagInput
+            value={tags}
+            onChange={setTags}
+            suggestions={suggestions}
+            placeholder="e.g. Jujutsu Kaisen, shounen"
+          />
         </div>
       </div>
 
       <div>
-        <label htmlFor="image" className="text-sm font-medium">
+        <Label htmlFor="image">
           Event image{imageRequired ? '' : ' (leave blank to keep the current one)'}
-        </label>
+        </Label>
         {preview && (
           <img
             src={preview}
             alt=""
             onError={handleImageError}
-            className="mt-2 aspect-video w-full rounded-lg border border-ink object-cover"
+            className="mt-2 aspect-video w-full rounded-base border-2 border-border object-cover"
           />
         )}
         <input
@@ -185,19 +177,15 @@ export default function EventForm({
           type="file"
           accept="image/*"
           onChange={handleImageChange}
-          className="mt-2 w-full text-sm"
+          className="mt-2 w-full text-sm font-base"
         />
       </div>
 
-      {error && <p className="text-sm text-crimson">{error}</p>}
+      {error && <p className="text-sm font-base text-warning-foreground">{error}</p>}
 
-      <button
-        type="submit"
-        disabled={submitting}
-        className="rounded-full bg-crimson px-4 py-2 font-medium text-white disabled:opacity-50"
-      >
+      <Button type="submit" disabled={submitting}>
         {submitting ? 'Saving…' : submitLabel}
-      </button>
+      </Button>
     </form>
   )
 }

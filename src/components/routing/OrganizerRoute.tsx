@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import LoadingState from '../ui/LoadingState'
 
 // Same idea as ProtectedRoute, but for the organizer dashboard — only
 // 'organizer' and 'admin' get past this one. A signed-in attendee is
@@ -8,7 +9,7 @@ import { useAuth } from '../../context/AuthContext'
 export default function OrganizerRoute() {
   const { user, loading } = useAuth()
 
-  if (loading) return null
+  if (loading) return <LoadingState />
 
   if (!user) {
     return <Navigate to="/login" replace />

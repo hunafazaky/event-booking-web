@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import type { Event } from '../../types/event'
-import { formatDay, formatMonth } from '../../lib/format'
-import CategoryBadge from '../ui/CategoryBadge'
-import TagChip from '../ui/TagChip'
+import { CATEGORY_LABELS } from '../../types/event'
+import { formatDay, formatMonth, handleImageError } from '../../lib/format'
+import { Badge } from '@/components/ui/badge'
 
 // The core visual idea for the whole app: an event card reads like a
 // ticket stub. The dashed line is a real perforation, not decoration —
@@ -12,25 +12,40 @@ export default function EventCard({ event }: { event: Event }) {
   return (
     <Link
       to={`/events/${event.id}`}
-      className="flex overflow-hidden rounded-lg border border-ink bg-white transition hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_var(--color-ink)]"
+      className="flex overflow-hidden rounded-base border-2 border-border bg-secondary-background shadow-shadow transition hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none"
     >
-      <div className="flex w-24 flex-none flex-col items-center justify-center border-r border-dashed border-ink bg-crimson-soft px-2 py-4 text-center">
-        <span className="font-display text-2xl leading-none">{formatDay(event.datetime)}</span>
-        <span className="mt-1 text-xs font-semibold text-crimson">{formatMonth(event.datetime)}</span>
+      <div className="flex w-24 flex-none flex-col items-center justify-center border-r-2 border-dashed border-border bg-main px-2 py-4 text-center">
+        <span className="font-heading text-2xl leading-none text-main-foreground">
+          {formatDay(event.datetime)}
+        </span>
+        <span className="mt-1 text-xs font-heading text-main-foreground">
+          {formatMonth(event.datetime)}
+        </span>
       </div>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-semibold">{event.name}</h3>
-          <CategoryBadge category={event.category} />
+          <h3 className="font-heading">{event.name}</h3>
+          <Badge>{CATEGORY_LABELS[event.category]}</Badge>
         </div>
 
-        <p className="text-sm text-ink-muted">{event.location}</p>
+        {event.image && (
+          <img
+            src={event.image}
+            alt=""
+            onError={handleImageError}
+            className="aspect-[3/1] w-full rounded-base border-2 border-border object-cover"
+          />
+        )}
+
+        <p className="text-sm font-base text-foreground/70">{event.location}</p>
 
         {event.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {event.tags.map((tag) => (
-              <TagChip key={tag.id} name={tag.name} />
+              <Badge key={tag.id} variant="tag">
+                {tag.name}
+              </Badge>
             ))}
           </div>
         )}

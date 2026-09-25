@@ -9,6 +9,11 @@ import { useDebouncedValue } from '../lib/useDebouncedValue'
 import EventCard from '../components/events/EventCard'
 import Pagination from '../components/ui/Pagination'
 import Hero from '../components/home/Hero'
+import LoadingState from '../components/ui/LoadingState'
+import EmptyState from '../components/ui/EmptyState'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 export default function HomePage() {
   const [search, setSearch] = useState('')
@@ -57,56 +62,43 @@ export default function HomePage() {
     <div>
       <Hero />
 
-      <h2 className="mt-10 font-display text-2xl">Upcoming Events</h2>
+      <h2 className="mt-10 font-heading text-2xl">Upcoming Events</h2>
 
       <div className="mt-6 flex flex-col gap-4">
-        <input
+        <Input
           type="search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search events by name or description"
-          className="rounded-lg border border-ink px-4 py-2 focus:outline-2 focus:outline-crimson"
         />
 
         <div className="flex flex-wrap gap-2">
-          <button
+          <Button
+            variant={category === '' ? 'default' : 'neutral'}
+            size="sm"
             onClick={() => setCategory('')}
-            className={
-              category === ''
-                ? 'rounded-full bg-ink px-3 py-1 text-sm text-white'
-                : 'rounded-full border border-line px-3 py-1 text-sm text-ink-muted'
-            }
           >
             All categories
-          </button>
+          </Button>
           {CATEGORIES.map((c) => (
-            <button
+            <Button
               key={c}
+              variant={category === c ? 'default' : 'neutral'}
+              size="sm"
               onClick={() => setCategory(c)}
-              className={
-                category === c
-                  ? 'rounded-full bg-ink px-3 py-1 text-sm text-white'
-                  : 'rounded-full border border-line px-3 py-1 text-sm text-ink-muted'
-              }
             >
               {CATEGORY_LABELS[c]}
-            </button>
+            </Button>
           ))}
         </div>
 
         {availableTags.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {availableTags.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => setTag(tag === t.name ? '' : t.name)}
-                className={
-                  tag === t.name
-                    ? 'rounded-full bg-violet px-2.5 py-1 text-xs font-medium text-white'
-                    : 'rounded-full bg-violet-soft px-2.5 py-1 text-xs font-medium text-violet'
-                }
-              >
-                {t.name}
+              <button key={t.id} onClick={() => setTag(tag === t.name ? '' : t.name)}>
+                <Badge variant="tag" className={tag === t.name ? 'ring-2 ring-ring ring-offset-2' : ''}>
+                  {t.name}
+                </Badge>
               </button>
             ))}
           </div>
@@ -114,11 +106,11 @@ export default function HomePage() {
       </div>
 
       <div className="mt-8">
-        {loading && <p className="text-ink-muted">Loading events…</p>}
-        {error && <p className="text-crimson">{error}</p>}
+        {loading && <LoadingState label="Loading events…" />}
+        {error && <p className="font-base text-warning-foreground">{error}</p>}
 
         {!loading && !error && events.length === 0 && (
-          <p className="text-ink-muted">No events match these filters yet.</p>
+          <EmptyState message="No events match these filters yet." />
         )}
 
         {!loading && !error && events.length > 0 && (

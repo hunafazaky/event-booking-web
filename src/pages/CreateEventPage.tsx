@@ -23,7 +23,7 @@ export default function CreateEventPage() {
 
   return (
     <div className="mx-auto max-w-lg">
-      <h1 className="font-display text-2xl">Create Event</h1>
+      <h1 className="font-heading text-2xl">Create Event</h1>
       <div className="mt-6">
         <EventForm imageRequired submitLabel="Create Event" onSubmit={handleSubmit} />
       </div>

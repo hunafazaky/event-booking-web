@@ -5,6 +5,7 @@ import EventForm, { type EventFormValues } from '../components/events/EventForm'
 import type { EventDetail, Category } from '../types/event'
 import { toDatetimeLocalValue } from '../lib/format'
 import { ApiError } from '../lib/api'
+import LoadingState from '../components/ui/LoadingState'
 
 export default function EditEventPage() {
   const { id } = useParams()
@@ -38,13 +39,13 @@ export default function EditEventPage() {
     navigate('/organizer')
   }
 
-  if (loading) return <p className="text-ink-muted">Loading event…</p>
-  if (error) return <p className="text-crimson">{error}</p>
+  if (loading) return <LoadingState label="Loading event…" />
+  if (error) return <p className="font-base text-warning-foreground">{error}</p>
   if (!event) return null
 
   return (
     <div className="mx-auto max-w-lg">
-      <h1 className="font-display text-2xl">Edit Event</h1>
+      <h1 className="font-heading text-2xl">Edit Event</h1>
       <div className="mt-6">
         <EventForm
           submitLabel="Save Changes"
