@@ -3,6 +3,26 @@
   "plugins": ["react", "typescript", "oxc"],
   "rules": {
     "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
+
+    // Off, not just downgraded — every remaining hit is a component
+    // (Button, Badge) exporting its cva() variants alongside itself
+    // (the actual shadcn/ui and neobrutalism.dev source ships this
+    // exact shape), or a context file (AuthContext) exporting its
+    // hook alongside its Provider (the standard React Context
+    // pattern). "Fix" would mean splitting every ui/*.tsx into two
+    // files each, against the convention this code is intentionally
+    // following, for a lint rule about Fast Refresh granularity that
+    // doesn't reflect an actual bug.
+    "react/only-export-components": "off",
+
+    // Off for the same reason: every remaining hit is a plain
+    // fetch/sync-on-mount-or-dependency-change effect (loading an
+    // event, a list, a booking) — the canonical case for needing an
+    // effect at all (synchronizing with an external system: the API).
+    // The one genuinely fixable instance (HomePage resetting page on
+    // filter change, which WAS deriving state from a dependency
+    // rather than synchronizing with anything external) has already
+    // been rewritten to set state directly in the handlers instead.
+    "react/set-state-in-effect": "off"
   }
 }

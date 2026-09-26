@@ -39,12 +39,6 @@ export default function HomePage() {
       .catch(() => setAvailableTags([]));
   }, []);
 
-  // Any filter changing should reset back to page 1 — staying on
-  // page 3 of a newly-narrowed result set would likely be empty.
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch, category, tag]);
-
   useEffect(() => {
     setLoading(true);
     setError(null);
@@ -68,6 +62,27 @@ export default function HomePage() {
       .finally(() => setLoading(false));
   }, [debouncedSearch, category, tag, page]);
 
+  // Any filter changing should reset back to page 1 — staying on
+  // page 3 of a newly-narrowed result set would likely be empty.
+  // Done directly in these handlers (the event that causes the
+  // change) rather than in a separate effect watching the filters —
+  // an effect existing just to derive one state from another is the
+  // pattern React's own docs call out as unnecessary.
+  function handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setSearch(e.target.value);
+    setPage(1);
+  }
+
+  function handleCategoryChange(next: Category | "") {
+    setCategory(next);
+    setPage(1);
+  }
+
+  function handleTagChange(name: string) {
+    setTag((current) => (current === name ? "" : name));
+    setPage(1);
+  }
+
   return (
     <div>
       <Hero />
@@ -78,7 +93,7 @@ export default function HomePage() {
         <Input
           type="search"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={handleSearchChange}
           placeholder="Search events by name or description"
         />
 
@@ -86,7 +101,7 @@ export default function HomePage() {
           <Button
             variant={category === "" ? "default" : "neutral"}
             size="sm"
-            onClick={() => setCategory("")}
+            onClick={() => handleCategoryChange("")}
           >
             All categories
           </Button>
@@ -95,7 +110,7 @@ export default function HomePage() {
               key={c}
               variant={category === c ? "default" : "neutral"}
               size="sm"
-              onClick={() => setCategory(c)}
+              onClick={() => handleCategoryChange(c)}
             >
               {CATEGORY_LABELS[c]}
             </Button>
@@ -105,10 +120,7 @@ export default function HomePage() {
         {availableTags.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {availableTags.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => setTag(tag === t.name ? "" : t.name)}
-              >
+              <button key={t.id} onClick={() => handleTagChange(t.name)}>
                 <Badge
                   variant="tag"
                   className={
