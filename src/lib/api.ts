@@ -1,4 +1,5 @@
 import type { Envelope } from '../types/api'
+import { trackRequest } from './wakeUp'
 
 // Falls back to localhost:8080 for local dev against `docker compose up`.
 // Set VITE_API_BASE_URL in a .env file to point elsewhere (see .env.example).
@@ -60,11 +61,18 @@ async function requestEnvelope<T>(path: string, options: RequestOptions = {}): P
     }
   }
 
-  const res = await fetch(`${BASE_URL}${path}`, {
-    method,
-    headers,
-    body: body === undefined ? undefined : isFormData ? body : JSON.stringify(body),
-  })
+  const res = await (async () => {
+    const done = trackRequest()
+    try {
+      return await fetch(`${BASE_URL}${path}`, {
+        method,
+        headers,
+        body: body === undefined ? undefined : isFormData ? body : JSON.stringify(body),
+      })
+    } finally {
+      done()
+    }
+  })()
 
   // A 204 or an empty body (e.g. DELETE endpoints) has nothing to
   // parse — treat it as success with no data rather than erroring on

@@ -12,32 +12,36 @@ import OrganizerDashboardPage from './pages/OrganizerDashboardPage'
 import CreateEventPage from './pages/CreateEventPage'
 import EditEventPage from './pages/EditEventPage'
 import NotFoundPage from './pages/NotFoundPage'
+import WakingUpOverlay from './components/ui/WakingUpOverlay'
 
 export default function App() {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        {/* Public */}
-        <Route index element={<HomePage />} />
-        <Route path="events/:id" element={<EventDetailPage />} />
-        <Route path="login" element={<LoginPage />} />
-        <Route path="signup" element={<SignUpPage />} />
+    <>
+      <WakingUpOverlay />
+      <Routes>
+        <Route element={<Layout />}>
+          {/* Public */}
+          <Route index element={<HomePage />} />
+          <Route path="events/:id" element={<EventDetailPage />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="signup" element={<SignUpPage />} />
 
-        {/* Any signed-in user */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="profile" element={<ProfilePage />} />
-          <Route path="bookings" element={<BookingsPage />} />
+          {/* Any signed-in user */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="bookings" element={<BookingsPage />} />
+          </Route>
+
+          {/* Organizer/admin only */}
+          <Route element={<OrganizerRoute />}>
+            <Route path="organizer" element={<OrganizerDashboardPage />} />
+            <Route path="organizer/new" element={<CreateEventPage />} />
+            <Route path="organizer/:id/edit" element={<EditEventPage />} />
+          </Route>
+
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
-
-        {/* Organizer/admin only */}
-        <Route element={<OrganizerRoute />}>
-          <Route path="organizer" element={<OrganizerDashboardPage />} />
-          <Route path="organizer/new" element={<CreateEventPage />} />
-          <Route path="organizer/:id/edit" element={<EditEventPage />} />
-        </Route>
-
-        <Route path="*" element={<NotFoundPage />} />
-      </Route>
-    </Routes>
+      </Routes>
+    </>
   )
 }
