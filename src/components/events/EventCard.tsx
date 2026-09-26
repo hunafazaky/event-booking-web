@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
-import type { Event } from '../../types/event'
-import { CATEGORY_LABELS } from '../../types/event'
-import { formatDay, formatMonth, handleImageError } from '../../lib/format'
-import { Badge } from '@/components/ui/badge'
+import { Link } from "react-router-dom";
+import type { Event } from "../../types/event";
+import { CATEGORY_LABELS } from "../../types/event";
+import { formatDay, formatMonth, handleImageError } from "../../lib/format";
+import { Badge } from "@/components/ui/badge";
 
 // The core visual idea for the whole app: an event card reads like a
 // ticket stub. The dashed line is a real perforation, not decoration —
@@ -51,5 +51,5 @@ export default function EventCard({ event }: { event: Event }) {
         )}
       </div>
     </Link>
-  )
+  );
 }

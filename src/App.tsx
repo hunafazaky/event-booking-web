@@ -1,18 +1,18 @@
-import { Route, Routes } from 'react-router-dom'
-import Layout from './components/layout/Layout'
-import ProtectedRoute from './components/routing/ProtectedRoute'
-import OrganizerRoute from './components/routing/OrganizerRoute'
-import HomePage from './pages/HomePage'
-import EventDetailPage from './pages/EventDetailPage'
-import LoginPage from './pages/LoginPage'
-import SignUpPage from './pages/SignUpPage'
-import ProfilePage from './pages/ProfilePage'
-import BookingsPage from './pages/BookingsPage'
-import OrganizerDashboardPage from './pages/OrganizerDashboardPage'
-import CreateEventPage from './pages/CreateEventPage'
-import EditEventPage from './pages/EditEventPage'
-import NotFoundPage from './pages/NotFoundPage'
-import WakingUpOverlay from './components/ui/WakingUpOverlay'
+import { Route, Routes } from "react-router-dom";
+import Layout from "./components/layout/Layout";
+import ProtectedRoute from "./components/routing/ProtectedRoute";
+import OrganizerRoute from "./components/routing/OrganizerRoute";
+import HomePage from "./pages/HomePage";
+import EventDetailPage from "./pages/EventDetailPage";
+import LoginPage from "./pages/LoginPage";
+import SignUpPage from "./pages/SignUpPage";
+import ProfilePage from "./pages/ProfilePage";
+import BookingsPage from "./pages/BookingsPage";
+import OrganizerDashboardPage from "./pages/OrganizerDashboardPage";
+import CreateEventPage from "./pages/CreateEventPage";
+import EditEventPage from "./pages/EditEventPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import WakingUpOverlay from "./components/ui/WakingUpOverlay";
 
 export default function App() {
   return (
@@ -43,5 +43,5 @@ export default function App() {
         </Route>
       </Routes>
     </>
-  )
+  );
 }

@@ -1,31 +1,31 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
-import { CATEGORIES, CATEGORY_LABELS, type Category } from '../../types/event'
-import { tagsApi } from '../../api/tags'
-import { ApiError } from '../../lib/api'
-import { handleImageError } from '../../lib/format'
-import TagInput from '../ui/TagInput'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { CATEGORIES, CATEGORY_LABELS, type Category } from "../../types/event";
+import { tagsApi } from "../../api/tags";
+import { ApiError } from "../../lib/api";
+import { handleImageError } from "../../lib/format";
+import TagInput from "../ui/TagInput";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 export interface EventFormValues {
-  name: string
-  description: string
-  location: string
-  datetimeLocal: string // <input type="datetime-local"> value — local time, no timezone
-  category: Category | ''
-  tags: string[]
+  name: string;
+  description: string;
+  location: string;
+  datetimeLocal: string; // <input type="datetime-local"> value — local time, no timezone
+  category: Category | "";
+  tags: string[];
 }
 
 interface EventFormProps {
-  initialValues?: Partial<EventFormValues>
-  initialImageUrl?: string
+  initialValues?: Partial<EventFormValues>;
+  initialImageUrl?: string;
   // True for create (an event needs an image from the start), false
   // for edit (keep the existing image unless a new one is chosen).
-  imageRequired?: boolean
-  submitLabel: string
-  onSubmit: (values: EventFormValues, image: File | null) => Promise<void>
+  imageRequired?: boolean;
+  submitLabel: string;
+  onSubmit: (values: EventFormValues, image: File | null) => Promise<void>;
 }
 
 // Shared by CreateEventPage and EditEventPage — same fields either
@@ -39,53 +39,64 @@ export default function EventForm({
   submitLabel,
   onSubmit,
 }: EventFormProps) {
-  const [name, setName] = useState(initialValues?.name ?? '')
-  const [description, setDescription] = useState(initialValues?.description ?? '')
-  const [location, setLocation] = useState(initialValues?.location ?? '')
-  const [datetimeLocal, setDatetimeLocal] = useState(initialValues?.datetimeLocal ?? '')
-  const [category, setCategory] = useState<Category | ''>(initialValues?.category ?? '')
-  const [tags, setTags] = useState<string[]>(initialValues?.tags ?? [])
+  const [name, setName] = useState(initialValues?.name ?? "");
+  const [description, setDescription] = useState(
+    initialValues?.description ?? "",
+  );
+  const [location, setLocation] = useState(initialValues?.location ?? "");
+  const [datetimeLocal, setDatetimeLocal] = useState(
+    initialValues?.datetimeLocal ?? "",
+  );
+  const [category, setCategory] = useState<Category | "">(
+    initialValues?.category ?? "",
+  );
+  const [tags, setTags] = useState<string[]>(initialValues?.tags ?? []);
 
-  const [image, setImage] = useState<File | null>(null)
-  const [preview, setPreview] = useState<string | null>(initialImageUrl ?? null)
-  const [suggestions, setSuggestions] = useState<string[]>([])
-  const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [image, setImage] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(
+    initialImageUrl ?? null,
+  );
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     tagsApi
       .list()
       .then((tags) => setSuggestions(tags.map((t) => t.name)))
-      .catch(() => {})
-  }, [])
+      .catch(() => {});
+  }, []);
 
   function handleImageChange(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0] ?? null
-    setImage(file)
-    if (file) setPreview(URL.createObjectURL(file))
+    const file = e.target.files?.[0] ?? null;
+    setImage(file);
+    if (file) setPreview(URL.createObjectURL(file));
   }
 
   async function handleSubmit(e: FormEvent) {
-    e.preventDefault()
+    e.preventDefault();
 
     if (imageRequired && !image) {
-      setError('Please choose an image.')
-      return
+      setError("Please choose an image.");
+      return;
     }
     if (!category) {
-      setError('Please choose a category.')
-      return
+      setError("Please choose a category.");
+      return;
     }
 
-    setSubmitting(true)
-    setError(null)
+    setSubmitting(true);
+    setError(null);
     try {
-      await onSubmit({ name, description, location, datetimeLocal, category, tags }, image)
+      await onSubmit(
+        { name, description, location, datetimeLocal, category, tags },
+        image,
+      );
       // On success the parent navigates away — no need to reset
       // `submitting` here, the form is about to unmount.
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Something went wrong.')
-      setSubmitting(false)
+      setError(err instanceof ApiError ? err.message : "Something went wrong.");
+      setSubmitting(false);
     }
   }
 
@@ -93,7 +104,13 @@ export default function EventForm({
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div>
         <Label htmlFor="name">Event name</Label>
-        <Input id="name" required value={name} onChange={(e) => setName(e.target.value)} className="mt-1" />
+        <Input
+          id="name"
+          required
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="mt-1"
+        />
       </div>
 
       <div>
@@ -138,7 +155,7 @@ export default function EventForm({
             <Button
               key={c}
               type="button"
-              variant={category === c ? 'default' : 'neutral'}
+              variant={category === c ? "default" : "neutral"}
               size="sm"
               onClick={() => setCategory(c)}
             >
@@ -162,7 +179,8 @@ export default function EventForm({
 
       <div>
         <Label htmlFor="image">
-          Event image{imageRequired ? '' : ' (leave blank to keep the current one)'}
+          Event image
+          {imageRequired ? "" : " (leave blank to keep the current one)"}
         </Label>
         {preview && (
           <img
@@ -181,11 +199,13 @@ export default function EventForm({
         />
       </div>
 
-      {error && <p className="text-sm font-base text-warning-foreground">{error}</p>}
+      {error && (
+        <p className="text-sm font-base text-warning-foreground">{error}</p>
+      )}
 
       <Button type="submit" disabled={submitting}>
-        {submitting ? 'Saving…' : submitLabel}
+        {submitting ? "Saving…" : submitLabel}
       </Button>
     </form>
-  )
+  );
 }

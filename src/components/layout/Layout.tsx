@@ -1,16 +1,25 @@
-import { useState } from 'react'
-import { Link, NavLink, Outlet } from 'react-router-dom'
-import { Menu } from 'lucide-react'
-import { useAuth } from '../../context/AuthContext'
-import { buttonVariants } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { cn } from '@/lib/utils'
+import { useState } from "react";
+import { Link, NavLink, Outlet } from "react-router-dom";
+import { Menu } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+import { buttonVariants } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 
 // Plain helper (not shaped like NavLink's render-prop signature) so it
 // can be called from both the desktop nav and the mobile sheet without
 // fighting React Router's own type for the className render-prop.
 function navLinkClass(isActive: boolean) {
-  return cn('font-heading text-sm', isActive ? 'text-foreground' : 'text-foreground/60')
+  return cn(
+    "font-heading text-sm",
+    isActive ? "text-foreground" : "text-foreground/60",
+  );
 }
 
 // The shared shell every route renders inside — header nav + footer,
@@ -19,16 +28,16 @@ function navLinkClass(isActive: boolean) {
 // signed in vs out) lives, so individual pages don't each have to
 // check `user` just to decide what the header should say.
 export default function Layout() {
-  const { user, signOut } = useAuth()
-  const [menuOpen, setMenuOpen] = useState(false)
+  const { user, signOut } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   function closeMenu() {
-    setMenuOpen(false)
+    setMenuOpen(false);
   }
 
   function handleSignOut() {
-    closeMenu()
-    signOut()
+    closeMenu();
+    signOut();
   }
 
   return (
@@ -41,34 +50,52 @@ export default function Layout() {
 
           {/* Desktop nav — hidden below sm, the Sheet below covers mobile instead */}
           <div className="hidden items-center gap-6 sm:flex">
-            <NavLink to="/" className={({ isActive }) => navLinkClass(isActive)}>
+            <NavLink
+              to="/"
+              className={({ isActive }) => navLinkClass(isActive)}
+            >
               Events
             </NavLink>
 
-            {(user?.role === 'organizer' || user?.role === 'admin') && (
-              <NavLink to="/organizer" className={({ isActive }) => navLinkClass(isActive)}>
+            {(user?.role === "organizer" || user?.role === "admin") && (
+              <NavLink
+                to="/organizer"
+                className={({ isActive }) => navLinkClass(isActive)}
+              >
                 My Events
               </NavLink>
             )}
 
             {user ? (
               <>
-                <NavLink to="/bookings" className={({ isActive }) => navLinkClass(isActive)}>
+                <NavLink
+                  to="/bookings"
+                  className={({ isActive }) => navLinkClass(isActive)}
+                >
                   My Bookings
                 </NavLink>
-                <NavLink to="/profile" className={({ isActive }) => navLinkClass(isActive)}>
+                <NavLink
+                  to="/profile"
+                  className={({ isActive }) => navLinkClass(isActive)}
+                >
                   {user.name}
                 </NavLink>
-                <button onClick={signOut} className="font-heading text-sm text-foreground/60">
+                <button
+                  onClick={signOut}
+                  className="font-heading text-sm text-foreground/60"
+                >
                   Sign Out
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="font-heading text-sm text-foreground/60">
+                <Link
+                  to="/login"
+                  className="font-heading text-sm text-foreground/60"
+                >
                   Sign In
                 </Link>
-                <Link to="/signup" className={buttonVariants({ size: 'sm' })}>
+                <Link to="/signup" className={buttonVariants({ size: "sm" })}>
                   Sign Up
                 </Link>
               </>
@@ -78,7 +105,10 @@ export default function Layout() {
           {/* Mobile hamburger + drawer */}
           <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger
-              className={cn(buttonVariants({ variant: 'neutral', size: 'icon' }), 'sm:hidden')}
+              className={cn(
+                buttonVariants({ variant: "neutral", size: "icon" }),
+                "sm:hidden",
+              )}
             >
               <Menu className="size-5" />
               <span className="sr-only">Open menu</span>
@@ -96,7 +126,7 @@ export default function Layout() {
                   Events
                 </NavLink>
 
-                {(user?.role === 'organizer' || user?.role === 'admin') && (
+                {(user?.role === "organizer" || user?.role === "admin") && (
                   <NavLink
                     to="/organizer"
                     onClick={closeMenu}
@@ -141,7 +171,7 @@ export default function Layout() {
                     <Link
                       to="/signup"
                       onClick={closeMenu}
-                      className={buttonVariants({ className: 'w-fit' })}
+                      className={buttonVariants({ className: "w-fit" })}
                     >
                       Sign Up
                     </Link>
@@ -161,5 +191,5 @@ export default function Layout() {
         Built by Zaky — a portfolio project for the anime community.
       </footer>
     </div>
-  )
+  );
 }

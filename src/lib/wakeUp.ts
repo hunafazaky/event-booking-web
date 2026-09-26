@@ -5,40 +5,40 @@
 // component subscribe to that, without api.ts (a plain module, not a
 // component) needing to know React exists.
 
-const SLOW_THRESHOLD_MS = 3000
+const SLOW_THRESHOLD_MS = 3000;
 
-type Listener = (waking: boolean) => void
+type Listener = (waking: boolean) => void;
 
-let listeners: Listener[] = []
-let slowRequestCount = 0
+let listeners: Listener[] = [];
+let slowRequestCount = 0;
 
 function notify(waking: boolean) {
-  listeners.forEach((l) => l(waking))
+  listeners.forEach((l) => l(waking));
 }
 
 export function subscribeWakeUp(listener: Listener): () => void {
-  listeners.push(listener)
+  listeners.push(listener);
   return () => {
-    listeners = listeners.filter((l) => l !== listener)
-  }
+    listeners = listeners.filter((l) => l !== listener);
+  };
 }
 
 // Call at the start of a request; call the returned function when it
 // finishes (success or failure) — mirrors a try/finally pattern.
 export function trackRequest(): () => void {
-  let firedSlow = false
+  let firedSlow = false;
 
   const timer = setTimeout(() => {
-    firedSlow = true
-    slowRequestCount++
-    if (slowRequestCount === 1) notify(true)
-  }, SLOW_THRESHOLD_MS)
+    firedSlow = true;
+    slowRequestCount++;
+    if (slowRequestCount === 1) notify(true);
+  }, SLOW_THRESHOLD_MS);
 
   return () => {
-    clearTimeout(timer)
+    clearTimeout(timer);
     if (firedSlow) {
-      slowRequestCount--
-      if (slowRequestCount === 0) notify(false)
+      slowRequestCount--;
+      if (slowRequestCount === 0) notify(false);
     }
-  }
+  };
 }

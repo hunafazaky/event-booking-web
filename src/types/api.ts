@@ -4,17 +4,17 @@
  * only present on success; `error` is only present on failure.
  */
 export interface Envelope<T> {
-  success: boolean
-  message?: string
-  data?: T
-  meta?: unknown
-  error?: string
+  success: boolean;
+  message?: string;
+  data?: T;
+  meta?: unknown;
+  error?: string;
 }
 
 /** Mirrors internal/dto.EventListMeta. */
 export interface PageMeta {
-  page: number
-  limit: number
-  total_rows: number
-  total_page: number
+  page: number;
+  limit: number;
+  total_rows: number;
+  total_page: number;
 }

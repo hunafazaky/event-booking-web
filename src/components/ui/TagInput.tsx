@@ -1,11 +1,11 @@
-import { useId, useState, type KeyboardEvent } from 'react'
-import { X } from 'lucide-react'
+import { useId, useState, type KeyboardEvent } from "react";
+import { X } from "lucide-react";
 
 interface TagInputProps {
-  value: string[]
-  onChange: (tags: string[]) => void
-  suggestions?: string[]
-  placeholder?: string
+  value: string[];
+  onChange: (tags: string[]) => void;
+  suggestions?: string[];
+  placeholder?: string;
 }
 
 // A chip-style tag editor: type a name, press Enter or comma to add
@@ -13,28 +13,33 @@ interface TagInputProps {
 // `suggestions` (existing tag names from the backend) power a native
 // <datalist> autocomplete, but typing any new name works too — tags
 // are find-or-create on the backend, so there's no "invalid tag".
-export default function TagInput({ value, onChange, suggestions = [], placeholder }: TagInputProps) {
-  const [draft, setDraft] = useState('')
-  const listId = useId()
+export default function TagInput({
+  value,
+  onChange,
+  suggestions = [],
+  placeholder,
+}: TagInputProps) {
+  const [draft, setDraft] = useState("");
+  const listId = useId();
 
   function addTag(raw: string) {
-    const name = raw.trim()
-    if (!name) return
-    const exists = value.some((t) => t.toLowerCase() === name.toLowerCase())
-    if (!exists) onChange([...value, name])
-    setDraft('')
+    const name = raw.trim();
+    if (!name) return;
+    const exists = value.some((t) => t.toLowerCase() === name.toLowerCase());
+    if (!exists) onChange([...value, name]);
+    setDraft("");
   }
 
   function removeTag(name: string) {
-    onChange(value.filter((t) => t !== name))
+    onChange(value.filter((t) => t !== name));
   }
 
   function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Enter' || e.key === ',') {
-      e.preventDefault()
-      addTag(draft)
-    } else if (e.key === 'Backspace' && draft === '' && value.length > 0) {
-      removeTag(value[value.length - 1])
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      addTag(draft);
+    } else if (e.key === "Backspace" && draft === "" && value.length > 0) {
+      removeTag(value[value.length - 1]);
     }
   }
 
@@ -74,5 +79,5 @@ export default function TagInput({ value, onChange, suggestions = [], placeholde
         </datalist>
       </div>
     </div>
-  )
+  );
 }

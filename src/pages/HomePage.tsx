@@ -1,62 +1,72 @@
-import { useEffect, useState } from 'react'
-import { eventsApi } from '../api/events'
-import { tagsApi } from '../api/tags'
-import { CATEGORIES, CATEGORY_LABELS, type Category } from '../types/event'
-import type { Event } from '../types/event'
-import type { Tag } from '../types/tag'
-import { ApiError } from '../lib/api'
-import { useDebouncedValue } from '../lib/useDebouncedValue'
-import EventCard from '../components/events/EventCard'
-import Pagination from '../components/ui/Pagination'
-import Hero from '../components/home/Hero'
-import LoadingState from '../components/ui/LoadingState'
-import EmptyState from '../components/ui/EmptyState'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { useEffect, useState } from "react";
+import { eventsApi } from "../api/events";
+import { tagsApi } from "../api/tags";
+import { CATEGORIES, CATEGORY_LABELS, type Category } from "../types/event";
+import type { Event } from "../types/event";
+import type { Tag } from "../types/tag";
+import { ApiError } from "../lib/api";
+import { useDebouncedValue } from "../lib/useDebouncedValue";
+import EventCard from "../components/events/EventCard";
+import Pagination from "../components/ui/Pagination";
+import Hero from "../components/home/Hero";
+import LoadingState from "../components/ui/LoadingState";
+import EmptyState from "../components/ui/EmptyState";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export default function HomePage() {
-  const [search, setSearch] = useState('')
-  const debouncedSearch = useDebouncedValue(search)
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search);
 
-  const [category, setCategory] = useState<Category | ''>('')
-  const [tag, setTag] = useState('')
-  const [page, setPage] = useState(1)
+  const [category, setCategory] = useState<Category | "">("");
+  const [tag, setTag] = useState("");
+  const [page, setPage] = useState(1);
 
-  const [availableTags, setAvailableTags] = useState<Tag[]>([])
+  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
 
-  const [events, setEvents] = useState<Event[]>([])
-  const [totalPages, setTotalPages] = useState(1)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [events, setEvents] = useState<Event[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // The tag-filter chip row only needs the full tag list once — it
   // doesn't depend on any of the filters below.
   useEffect(() => {
-    tagsApi.list().then(setAvailableTags).catch(() => setAvailableTags([]))
-  }, [])
+    tagsApi
+      .list()
+      .then(setAvailableTags)
+      .catch(() => setAvailableTags([]));
+  }, []);
 
   // Any filter changing should reset back to page 1 — staying on
   // page 3 of a newly-narrowed result set would likely be empty.
   useEffect(() => {
-    setPage(1)
-  }, [debouncedSearch, category, tag])
+    setPage(1);
+  }, [debouncedSearch, category, tag]);
 
   useEffect(() => {
-    setLoading(true)
-    setError(null)
+    setLoading(true);
+    setError(null);
 
     eventsApi
-      .list({ search: debouncedSearch, category: category || undefined, tag: tag || undefined, page })
+      .list({
+        search: debouncedSearch,
+        category: category || undefined,
+        tag: tag || undefined,
+        page,
+      })
       .then(({ events, meta }) => {
-        setEvents(events)
-        setTotalPages(meta.total_page)
+        setEvents(events);
+        setTotalPages(meta.total_page);
       })
       .catch((err) => {
-        setError(err instanceof ApiError ? err.message : 'Failed to load events.')
+        setError(
+          err instanceof ApiError ? err.message : "Failed to load events.",
+        );
       })
-      .finally(() => setLoading(false))
-  }, [debouncedSearch, category, tag, page])
+      .finally(() => setLoading(false));
+  }, [debouncedSearch, category, tag, page]);
 
   return (
     <div>
@@ -74,16 +84,16 @@ export default function HomePage() {
 
         <div className="flex flex-wrap gap-2">
           <Button
-            variant={category === '' ? 'default' : 'neutral'}
+            variant={category === "" ? "default" : "neutral"}
             size="sm"
-            onClick={() => setCategory('')}
+            onClick={() => setCategory("")}
           >
             All categories
           </Button>
           {CATEGORIES.map((c) => (
             <Button
               key={c}
-              variant={category === c ? 'default' : 'neutral'}
+              variant={category === c ? "default" : "neutral"}
               size="sm"
               onClick={() => setCategory(c)}
             >
@@ -95,8 +105,16 @@ export default function HomePage() {
         {availableTags.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {availableTags.map((t) => (
-              <button key={t.id} onClick={() => setTag(tag === t.name ? '' : t.name)}>
-                <Badge variant="tag" className={tag === t.name ? 'ring-2 ring-ring ring-offset-2' : ''}>
+              <button
+                key={t.id}
+                onClick={() => setTag(tag === t.name ? "" : t.name)}
+              >
+                <Badge
+                  variant="tag"
+                  className={
+                    tag === t.name ? "ring-2 ring-ring ring-offset-2" : ""
+                  }
+                >
                   {t.name}
                 </Badge>
               </button>
@@ -124,5 +142,5 @@ export default function HomePage() {
 
       <Pagination page={page} totalPages={totalPages} onChange={setPage} />
     </div>
-  )
+  );
 }

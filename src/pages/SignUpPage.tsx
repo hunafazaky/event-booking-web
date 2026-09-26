@@ -1,36 +1,36 @@
-import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import { ApiError } from '../lib/api'
-import type { Role } from '../types/user'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { ApiError } from "../lib/api";
+import type { Role } from "../types/user";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function SignUpPage() {
-  const { signUp } = useAuth()
-  const navigate = useNavigate()
+  const { signUp } = useAuth();
+  const navigate = useNavigate();
 
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [role, setRole] = useState<Role>('attendee')
-  const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState<Role>("attendee");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setSubmitting(true)
-    setError(null)
+    e.preventDefault();
+    setSubmitting(true);
+    setError(null);
 
     try {
-      await signUp({ name, email, password, role })
-      navigate('/', { replace: true })
+      await signUp({ name, email, password, role });
+      navigate("/", { replace: true });
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Failed to sign up.')
+      setError(err instanceof ApiError ? err.message : "Failed to sign up.");
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
   }
 
@@ -82,16 +82,16 @@ export default function SignUpPage() {
               <div className="mt-2 flex gap-2">
                 <Button
                   type="button"
-                  variant={role === 'attendee' ? 'default' : 'neutral'}
-                  onClick={() => setRole('attendee')}
+                  variant={role === "attendee" ? "default" : "neutral"}
+                  onClick={() => setRole("attendee")}
                   className="flex-1"
                 >
                   Attend events
                 </Button>
                 <Button
                   type="button"
-                  variant={role === 'organizer' ? 'default' : 'neutral'}
-                  onClick={() => setRole('organizer')}
+                  variant={role === "organizer" ? "default" : "neutral"}
+                  onClick={() => setRole("organizer")}
                   className="flex-1"
                 >
                   Organize events
@@ -102,21 +102,25 @@ export default function SignUpPage() {
               </p>
             </fieldset>
 
-            {error && <p className="text-sm font-base text-warning-foreground">{error}</p>}
+            {error && (
+              <p className="text-sm font-base text-warning-foreground">
+                {error}
+              </p>
+            )}
 
             <Button type="submit" disabled={submitting}>
-              {submitting ? 'Signing up…' : 'Sign Up'}
+              {submitting ? "Signing up…" : "Sign Up"}
             </Button>
           </form>
         </CardContent>
       </Card>
 
       <p className="mt-4 text-sm font-base text-foreground/70">
-        Already have an account?{' '}
+        Already have an account?{" "}
         <Link to="/login" className="font-heading underline">
           Sign in
         </Link>
       </p>
     </div>
-  )
+  );
 }

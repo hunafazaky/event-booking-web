@@ -1,29 +1,30 @@
-import { api } from '../lib/api'
-import type { User, Role } from '../types/user'
+import { api } from "../lib/api";
+import type { User, Role } from "../types/user";
 
 export interface SignUpInput {
-  name: string
-  email: string
-  password: string
-  role?: Role // 'admin' is rejected by the backend — only attendee/organizer here
+  name: string;
+  email: string;
+  password: string;
+  role?: Role; // 'admin' is rejected by the backend — only attendee/organizer here
 }
 
 export interface SignInInput {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export interface SignInResult {
-  token: string
-  user: User
+  token: string;
+  user: User;
 }
 
 export const authApi = {
-  signUp: (input: SignUpInput) => api.post<User>('/auth/signup', input, false),
-  signIn: (input: SignInInput) => api.post<SignInResult>('/auth/signin', input, false),
-  getMe: () => api.get<User>('/auth/me'),
-  updateProfile: (name: string) => api.patch<User>('/auth/me', { name }),
-  deleteAccount: () => api.delete<null>('/auth/me'),
+  signUp: (input: SignUpInput) => api.post<User>("/auth/signup", input, false),
+  signIn: (input: SignInInput) =>
+    api.post<SignInResult>("/auth/signin", input, false),
+  getMe: () => api.get<User>("/auth/me"),
+  updateProfile: (name: string) => api.patch<User>("/auth/me", { name }),
+  deleteAccount: () => api.delete<null>("/auth/me"),
   updateInterests: (interests: string[]) =>
-    api.put<User>('/auth/me/interests', { interests }),
-}
+    api.put<User>("/auth/me/interests", { interests }),
+};

@@ -1,28 +1,34 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { eventsApi } from '../api/events'
-import EventForm, { type EventFormValues } from '../components/events/EventForm'
-import type { EventDetail, Category } from '../types/event'
-import { toDatetimeLocalValue } from '../lib/format'
-import { ApiError } from '../lib/api'
-import LoadingState from '../components/ui/LoadingState'
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { eventsApi } from "../api/events";
+import EventForm, {
+  type EventFormValues,
+} from "../components/events/EventForm";
+import type { EventDetail, Category } from "../types/event";
+import { toDatetimeLocalValue } from "../lib/format";
+import { ApiError } from "../lib/api";
+import LoadingState from "../components/ui/LoadingState";
 
 export default function EditEventPage() {
-  const { id } = useParams()
-  const eventId = Number(id)
-  const navigate = useNavigate()
+  const { id } = useParams();
+  const eventId = Number(id);
+  const navigate = useNavigate();
 
-  const [event, setEvent] = useState<EventDetail | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [event, setEvent] = useState<EventDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     eventsApi
       .getById(eventId)
       .then(setEvent)
-      .catch((err) => setError(err instanceof ApiError ? err.message : 'Failed to load event.'))
-      .finally(() => setLoading(false))
-  }, [eventId])
+      .catch((err) =>
+        setError(
+          err instanceof ApiError ? err.message : "Failed to load event.",
+        ),
+      )
+      .finally(() => setLoading(false));
+  }, [eventId]);
 
   async function handleSubmit(values: EventFormValues, image: File | null) {
     await eventsApi.update(eventId, {
@@ -35,13 +41,14 @@ export default function EditEventPage() {
       // undefined (not chosen) means "keep the existing image" —
       // buildEventForm on the API side only sends the field when set.
       image: image ?? undefined,
-    })
-    navigate('/organizer')
+    });
+    navigate("/organizer");
   }
 
-  if (loading) return <LoadingState label="Loading event…" />
-  if (error) return <p className="font-base text-warning-foreground">{error}</p>
-  if (!event) return null
+  if (loading) return <LoadingState label="Loading event…" />;
+  if (error)
+    return <p className="font-base text-warning-foreground">{error}</p>;
+  if (!event) return null;
 
   return (
     <div className="mx-auto max-w-lg">
@@ -62,5 +69,5 @@ export default function EditEventPage() {
         />
       </div>
     </div>
-  )
+  );
 }

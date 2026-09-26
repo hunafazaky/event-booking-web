@@ -86,12 +86,12 @@ This builds the app for production and serves the generated bundle locally for p
 
 ## Available Scripts
 
-| Script | Description |
-| :--- | :--- |
-| `npm run dev` | Starts the Vite development server |
-| `npm run build` | Runs TypeScript checks and builds the production bundle |
-| `npm run lint` | Runs the project linter with oxlint |
-| `npm run preview` | Serves the production build locally for preview |
+| Script            | Description                                             |
+| :---------------- | :------------------------------------------------------ |
+| `npm run dev`     | Starts the Vite development server                      |
+| `npm run build`   | Runs TypeScript checks and builds the production bundle |
+| `npm run lint`    | Runs the project linter with oxlint                     |
+| `npm run preview` | Serves the production build locally for preview         |
 
 ---
 
